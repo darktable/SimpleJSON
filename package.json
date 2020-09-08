@@ -1,0 +1,16 @@
+{
+	"name": "com.github.bunny83.simplejson",
+	"version": "0.1.0",
+	"displayName": "SimpleJSON",
+	"description": "JSON Parser (A simple one)",
+	"unity": "2018.4",
+	"keywords": [
+		"utilities",
+		"JSON"
+	],
+	"author": {
+		"name": "Markus Göbel",
+		"email": "",
+		"url": "https://github.com/Bunny83"
+	}
+}
