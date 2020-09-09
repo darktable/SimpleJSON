@@ -1,6 +1,6 @@
 #region License and information
 /* * * * *
- * 
+ *
  * Unity extension for the SimpleJSON framework. It does only work together with
  * the SimpleJSON.cs
  * It provides several helpers and conversion operators to serialize/deserialize
@@ -11,22 +11,22 @@
  * control what node type should be used for serializing the given type. So a
  * Vector3 as array would look like [12,32,24] and {"x":12, "y":32, "z":24} as
  * object.
- * 
- * 
+ *
+ *
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2012-2017 Markus Göbel (Bunny83)
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,7 +34,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * * * * */
 
 #endregion License and information
@@ -44,8 +44,8 @@ using UnityEngine;
 namespace SimpleJSON
 {
     public enum JSONContainerType { Array, Object }
-	public partial class JSONNode
-	{
+    public partial class JSONNode
+    {
         public static JSONContainerType VectorContainerType = JSONContainerType.Array;
         public static JSONContainerType QuaternionContainerType = JSONContainerType.Array;
         public static JSONContainerType RectContainerType = JSONContainerType.Array;
@@ -58,37 +58,37 @@ namespace SimpleJSON
 
         #region implicit conversion operators
         public static implicit operator JSONNode(Vector2 aVec)
-		{
+        {
             JSONNode n = GetContainer(VectorContainerType);
             n.WriteVector2(aVec);
-			return n;
-		}
-		public static implicit operator JSONNode(Vector3 aVec)
-		{
+            return n;
+        }
+        public static implicit operator JSONNode(Vector3 aVec)
+        {
             JSONNode n = GetContainer(VectorContainerType);
             n.WriteVector3(aVec);
             return n;
         }
         public static implicit operator JSONNode(Vector4 aVec)
-		{
+        {
             JSONNode n = GetContainer(VectorContainerType);
             n.WriteVector4(aVec);
             return n;
         }
         public static implicit operator JSONNode(Quaternion aRot)
-		{
+        {
             JSONNode n = GetContainer(QuaternionContainerType);
             n.WriteQuaternion(aRot);
             return n;
         }
         public static implicit operator JSONNode(Rect aRect)
-		{
+        {
             JSONNode n = GetContainer(RectContainerType);
             n.WriteRect(aRect);
             return n;
         }
         public static implicit operator JSONNode(RectOffset aRect)
-		{
+        {
             JSONNode n = GetContainer(RectContainerType);
             n.WriteRectOffset(aRect);
             return n;
@@ -98,26 +98,32 @@ namespace SimpleJSON
         {
             return aNode.ReadVector2();
         }
+
         public static implicit operator Vector3(JSONNode aNode)
         {
             return aNode.ReadVector3();
         }
+
         public static implicit operator Vector4(JSONNode aNode)
         {
             return aNode.ReadVector4();
         }
+
         public static implicit operator Quaternion(JSONNode aNode)
         {
             return aNode.ReadQuaternion();
         }
+
         public static implicit operator Rect(JSONNode aNode)
         {
             return aNode.ReadRect();
         }
+
         public static implicit operator RectOffset(JSONNode aNode)
         {
             return aNode.ReadRectOffset();
         }
+
         #endregion implicit conversion operators
 
         #region Vector2
@@ -129,6 +135,7 @@ namespace SimpleJSON
                 return new Vector2(this[0].AsFloat, this[1].AsFloat);
             return aDefault;
         }
+
         public Vector2 ReadVector2(string aXName, string aYName)
         {
             if (IsObject)
@@ -142,6 +149,7 @@ namespace SimpleJSON
         {
             return ReadVector2(Vector2.zero);
         }
+
         public JSONNode WriteVector2(Vector2 aVec, string aXName = "x", string aYName = "y")
         {
             if (IsObject)
@@ -169,16 +177,19 @@ namespace SimpleJSON
                 return new Vector3(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat);
             return aDefault;
         }
+
         public Vector3 ReadVector3(string aXName, string aYName, string aZName)
         {
             if (IsObject)
                 return new Vector3(this[aXName].AsFloat, this[aYName].AsFloat, this[aZName].AsFloat);
             return Vector3.zero;
         }
+
         public Vector3 ReadVector3()
         {
             return ReadVector3(Vector3.zero);
         }
+
         public JSONNode WriteVector3(Vector3 aVec, string aXName = "x", string aYName = "y", string aZName = "z")
         {
             if (IsObject)
@@ -208,10 +219,12 @@ namespace SimpleJSON
                 return new Vector4(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this[3].AsFloat);
             return aDefault;
         }
+
         public Vector4 ReadVector4()
         {
             return ReadVector4(Vector4.zero);
         }
+
         public JSONNode WriteVector4(Vector4 aVec)
         {
             if (IsObject)
@@ -243,10 +256,12 @@ namespace SimpleJSON
                 return new Quaternion(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this[3].AsFloat);
             return aDefault;
         }
+
         public Quaternion ReadQuaternion()
         {
             return ReadQuaternion(Quaternion.identity);
         }
+
         public JSONNode WriteQuaternion(Quaternion aRot)
         {
             if (IsObject)
@@ -278,10 +293,12 @@ namespace SimpleJSON
                 return new Rect(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this[3].AsFloat);
             return aDefault;
         }
+
         public Rect ReadRect()
         {
             return ReadRect(new Rect());
         }
+
         public JSONNode WriteRect(Rect aRect)
         {
             if (IsObject)
@@ -313,10 +330,12 @@ namespace SimpleJSON
                 return new RectOffset(this[0].AsInt, this[1].AsInt, this[2].AsInt, this[3].AsInt);
             return aDefault;
         }
+
         public RectOffset ReadRectOffset()
         {
             return ReadRectOffset(new RectOffset());
         }
+
         public JSONNode WriteRectOffset(RectOffset aRect)
         {
             if (IsObject)
@@ -352,6 +371,7 @@ namespace SimpleJSON
             }
             return result;
         }
+
         public JSONNode WriteMatrix(Matrix4x4 aMatrix)
         {
             if (IsArray)
