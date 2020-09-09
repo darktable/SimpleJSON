@@ -138,6 +138,26 @@ namespace Tests
 		}
 
         [Test]
+        public void MatrixTest()
+        {
+            Matrix4x4 matrix = new Matrix4x4();
+            for (int i=0; i < 16; i++)
+			{
+                matrix[i] = Random.Range(-1.0f, 1.0f);
+			}
+
+            var jsonArray = new JSONArray().WriteMatrix(matrix);
+
+            var jsonArrayString = jsonArray.ToString();
+
+            Debug.Log($"{matrix.GetType().Name} array: {jsonArrayString}");
+
+            var deserializedArray = JSON.Parse(jsonArrayString).ReadMatrix();
+
+            Assert.AreEqual(matrix, deserializedArray);
+        }
+
+        [Test]
         public void ColorTest()
         {           
             Color color = new Color(Random.value, Random.value, Random.value, Random.value);

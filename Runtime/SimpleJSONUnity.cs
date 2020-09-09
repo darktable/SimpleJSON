@@ -427,7 +427,7 @@ namespace SimpleJSON
                 Inline = true;
                 for (int i = 0; i < 16; i++)
                 {
-                    this[i].AsFloat = aMatrix[i];
+                    Add(aMatrix[i]);
                 }
             }
             return this;
