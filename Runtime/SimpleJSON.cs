@@ -756,7 +756,7 @@ namespace SimpleJSON
         {
             var node = new JSONArray();
             node.m_List.Capacity = m_List.Capacity;
-            foreach(var n in m_List)
+            foreach (var n in m_List)
             {
                 if (n != null)
                     node.Add(n.Clone());
@@ -1347,6 +1347,23 @@ namespace SimpleJSON
         public static JSONNode Parse(string aJSON)
         {
             return JSONNode.Parse(aJSON);
+        }
+
+        public static bool TryParse(string aJSON, out JSONNode aResult)
+        {
+            try
+            {
+                aResult = JSON.Parse(aJSON);
+                return true;
+            }
+            catch (Exception e)
+            {
+#if UNITY_5_3_OR_NEWER
+                UnityEngine.Debug.LogException(e);
+#endif
+                aResult = null;
+                return false;
+            }
         }
     }
 }
