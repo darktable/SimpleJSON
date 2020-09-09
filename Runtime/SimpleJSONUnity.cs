@@ -48,7 +48,7 @@ namespace SimpleJSON
     {
         public static JSONContainerType VectorContainerType = JSONContainerType.Array;
         public static JSONContainerType QuaternionContainerType = JSONContainerType.Array;
-        public static JSONContainerType RectContainerType = JSONContainerType.Array;
+        public static JSONContainerType RectContainerType = JSONContainerType.Object;
         private static JSONNode GetContainer(JSONContainerType aType)
         {
             if (aType == JSONContainerType.Array)
@@ -161,8 +161,11 @@ namespace SimpleJSON
             else if (IsArray)
             {
                 Inline = true;
-                this[0].AsFloat = aVec.x;
-                this[1].AsFloat = aVec.y;
+
+                for (int i=0; i < 2; i++)
+				{
+                    Add(aVec[i]);
+				}
             }
             return this;
         }
@@ -202,9 +205,10 @@ namespace SimpleJSON
             else if (IsArray)
             {
                 Inline = true;
-                this[0].AsFloat = aVec.x;
-                this[1].AsFloat = aVec.y;
-                this[2].AsFloat = aVec.z;
+                for (int i = 0; i < 3; i++)
+                {
+                    Add(aVec[i]);
+                }
             }
             return this;
         }
@@ -238,10 +242,11 @@ namespace SimpleJSON
             else if (IsArray)
             {
                 Inline = true;
-                this[0].AsFloat = aVec.x;
-                this[1].AsFloat = aVec.y;
-                this[2].AsFloat = aVec.z;
-                this[3].AsFloat = aVec.w;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Add(aVec[i]);
+                }
             }
             return this;
         }
@@ -275,10 +280,11 @@ namespace SimpleJSON
             else if (IsArray)
             {
                 Inline = true;
-                this[0].AsFloat = aRot.x;
-                this[1].AsFloat = aRot.y;
-                this[2].AsFloat = aRot.z;
-                this[3].AsFloat = aRot.w;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Add(aRot[i]);
+                }
             }
             return this;
         }
@@ -312,10 +318,10 @@ namespace SimpleJSON
             else if (IsArray)
             {
                 Inline = true;
-                this[0].AsFloat = aRect.x;
-                this[1].AsFloat = aRect.y;
-                this[2].AsFloat = aRect.width;
-                this[3].AsFloat = aRect.height;
+                Add(aRect.x);
+                Add(aRect.y);
+                Add(aRect.width);
+                Add(aRect.height);
             }
             return this;
         }
@@ -349,10 +355,10 @@ namespace SimpleJSON
             else if (IsArray)
             {
                 Inline = true;
-                this[0].AsInt = aRect.left;
-                this[1].AsInt = aRect.right;
-                this[2].AsInt = aRect.top;
-                this[3].AsInt = aRect.bottom;
+                Add(aRect.left);
+                Add(aRect.right);
+                Add(aRect.top);
+                Add(aRect.bottom);
             }
             return this;
         }
