@@ -49,6 +49,7 @@ namespace SimpleJSON
         public static JSONContainerType VectorContainerType = JSONContainerType.Array;
         public static JSONContainerType QuaternionContainerType = JSONContainerType.Array;
         public static JSONContainerType RectContainerType = JSONContainerType.Object;
+        public static JSONContainerType ColorContainerType = JSONContainerType.Object;
         private static JSONNode GetContainer(JSONContainerType aType)
         {
             if (aType == JSONContainerType.Array)
@@ -63,34 +64,60 @@ namespace SimpleJSON
             n.WriteVector2(aVec);
             return n;
         }
+
         public static implicit operator JSONNode(Vector3 aVec)
         {
             JSONNode n = GetContainer(VectorContainerType);
             n.WriteVector3(aVec);
             return n;
         }
+
         public static implicit operator JSONNode(Vector4 aVec)
         {
             JSONNode n = GetContainer(VectorContainerType);
             n.WriteVector4(aVec);
             return n;
         }
+
         public static implicit operator JSONNode(Quaternion aRot)
         {
             JSONNode n = GetContainer(QuaternionContainerType);
             n.WriteQuaternion(aRot);
             return n;
         }
+
         public static implicit operator JSONNode(Rect aRect)
         {
             JSONNode n = GetContainer(RectContainerType);
             n.WriteRect(aRect);
             return n;
         }
+
         public static implicit operator JSONNode(RectOffset aRect)
         {
             JSONNode n = GetContainer(RectContainerType);
             n.WriteRectOffset(aRect);
+            return n;
+        }
+
+        public static implicit operator JSONNode(Matrix4x4 aMatrix)
+        {
+            JSONNode n = new JSONArray();
+            n.WriteMatrix(aMatrix);
+            return n;
+        }
+
+        public static implicit operator JSONNode(Color aColor)
+        {
+            JSONNode n = GetContainer(ColorContainerType);
+            n.WriteColor(aColor);
+            return n;
+        }
+
+        public static implicit operator JSONNode(Color32 aColor32)
+        {
+            JSONNode n = GetContainer(ColorContainerType);
+            n.WriteColor32(aColor32);
             return n;
         }
 
@@ -122,6 +149,21 @@ namespace SimpleJSON
         public static implicit operator RectOffset(JSONNode aNode)
         {
             return aNode.ReadRectOffset();
+        }
+
+        public static implicit operator Matrix4x4(JSONNode aNode)
+        {
+            return aNode.ReadMatrix();
+        }
+
+        public static implicit operator Color(JSONNode aNode)
+        {
+            return aNode.ReadColor();
+        }
+
+        public static implicit operator Color32(JSONNode aNode)
+        {
+            return aNode.ReadColor32();
         }
 
         #endregion implicit conversion operators
@@ -391,5 +433,98 @@ namespace SimpleJSON
             return this;
         }
         #endregion Matrix4x4
+
+        #region Color
+        public Color ReadColor()
+        {
+            if (IsString && ColorUtility.TryParseHtmlString(Value, out Color htmlColor))
+			{
+                return htmlColor;
+			}
+            
+            if (IsArray)
+            {
+                return ReadVector4();
+            }
+
+            if (IsObject)
+			{
+                return new Color(this["r"].AsFloat, this["g"].AsFloat, this["b"].AsFloat, this["a"].AsFloat);
+			}
+
+            return Color.white;
+        }
+
+        public JSONNode WriteColor(Color aColor)
+		{
+            if (IsString)
+			{
+                Value = $"#{ColorUtility.ToHtmlStringRGBA(aColor)}"; 
+			}
+            else if (IsObject)
+            {
+                Inline = true;
+                this["r"].AsFloat = aColor.r;
+                this["g"].AsFloat = aColor.g;
+                this["b"].AsFloat = aColor.b;
+                this["a"].AsFloat = aColor.a;
+
+            }
+            else if (IsArray)
+			{
+                WriteVector4(aColor);
+            }
+
+            return this;
+		}
+        #endregion Color
+
+        #region Color32
+        public Color32 ReadColor32()
+        {
+            if (IsString && ColorUtility.TryParseHtmlString(Value, out Color htmlColor))
+            {
+                return htmlColor;
+            }
+
+            if (IsArray)
+            {
+                return new Color32(this[0].AsByte, this[1].AsByte, this[2].AsByte, this[3].AsByte);
+            }
+
+            if (IsObject)
+            {
+                return new Color32(this["r"].AsByte, this["g"].AsByte, this["b"].AsByte, this["a"].AsByte);
+            }
+
+            return Color.white;
+        }
+
+        public JSONNode WriteColor32(Color32 aColor32)
+        {
+            if (IsString)
+            {
+                Value = $"#{ColorUtility.ToHtmlStringRGBA(aColor32)}";
+            }
+            else if (IsObject)
+            {
+                Inline = true;
+                this["r"].AsByte = aColor32.r;
+                this["g"].AsByte = aColor32.g;
+                this["b"].AsByte = aColor32.b;
+                this["a"].AsByte = aColor32.a;
+
+            }
+            else if (IsArray)
+            {
+                Add(aColor32.r);
+                Add(aColor32.g);
+                Add(aColor32.b);
+                Add(aColor32.a);
+            }
+
+            return this;
+        }
+        #endregion Color32
     }
 }

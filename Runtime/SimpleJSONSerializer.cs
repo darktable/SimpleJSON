@@ -38,19 +38,23 @@ namespace SimpleJSON
                     return serializableValue.ToJSONNode();
 #if UNITY_5_3_OR_NEWER
                 case Vector2 v2Value:
-                    return v2Value.ToJSONNode();
+                    return v2Value;
                 case Vector3 v3Value:
-                    return v3Value.ToJSONNode();
+                    return v3Value;
                 case Vector4 v4Value:
-                    return v4Value.ToJSONNode();
+                    return v4Value;
                 case Quaternion quatValue:
-                    return quatValue.ToJSONNode();
+                    return quatValue;
                 case Rect rectValue:
-                    return rectValue.ToJSONNode();
+                    return rectValue;
                 case RectOffset rectOffsetValue:
-                    return rectOffsetValue.ToJSONNode();
+                    return rectOffsetValue;
                 case Matrix4x4 matrixValue:
-                    return matrixValue.ToJSONNode();
+                    return matrixValue;
+                case Color colorValue:
+                    return colorValue;
+                case Color32 color32Value:
+                    return color32Value;
 #endif
 
                 default:
@@ -164,6 +168,30 @@ namespace SimpleJSON
         public static JSONNode ToJSONNode(this Matrix4x4 matrix)
         {
             return new JSONArray().WriteMatrix(matrix);
+        }
+
+        public static JSONNode ToJSONNode(this Color color, bool asArray = false)
+        {
+            if (asArray)
+            {
+                return new JSONArray().WriteColor(color);
+            }
+            else
+            {
+                return new JSONObject().WriteColor(color);
+            }
+        }
+
+        public static JSONNode ToJSONNode(this Color32 color32, bool asArray = false)
+        {
+            if (asArray)
+            {
+                return new JSONArray().WriteColor32(color32);
+            }
+            else
+            {
+                return new JSONObject().WriteColor32(color32);
+            }
         }
 #endif
 

@@ -294,6 +294,12 @@ namespace SimpleJSON
 			}
 		}
 
+		public virtual byte AsByte
+		{
+			get { return (byte) AsDouble; }
+			set { AsDouble = value; }
+		}
+
 		public virtual int AsInt
 		{
 			get { return (int)AsDouble; }
@@ -389,6 +395,11 @@ namespace SimpleJSON
 		public static implicit operator JSONNode(int n)
 		{
 			return new JSONNumber(n);
+		}
+
+		public static implicit operator byte(JSONNode d)
+		{
+			return (d == null) ? (byte) 0 : d.AsByte;
 		}
 
 		public static implicit operator int(JSONNode d)
@@ -1098,6 +1109,11 @@ namespace SimpleJSON
 			}
 		}
 
+		public JSONString() : this(null)
+		{
+
+		}
+
 		public JSONString(string aData)
 		{
 			m_Data = aData;
@@ -1419,6 +1435,12 @@ namespace SimpleJSON
 		public override int GetHashCode()
 		{
 			return 0;
+		}
+
+		public override byte AsByte
+		{
+			get { Set(new JSONNumber(0)); return (byte) 0; }
+			set { Set(new JSONNumber(value)); }
 		}
 
 		public override int AsInt
