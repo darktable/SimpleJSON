@@ -283,8 +283,7 @@ namespace SimpleJSON
         {
             get
             {
-                double v = 0.0;
-                if (double.TryParse(Value, NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                if (double.TryParse(Value, NumberStyles.Float, CultureInfo.InvariantCulture, out double v))
                     return v;
                 return 0.0;
             }
@@ -316,8 +315,7 @@ namespace SimpleJSON
         {
             get
             {
-                bool v = false;
-                if (bool.TryParse(Value, out v))
+                if (bool.TryParse(Value, out bool v))
                     return v;
                 return !string.IsNullOrEmpty(Value);
             }
@@ -331,8 +329,7 @@ namespace SimpleJSON
         {
             get
             {
-                long val = 0;
-                if (long.TryParse(Value, out val))
+                if (long.TryParse(Value, out long val))
                     return val;
                 return 0L;
             }
@@ -996,8 +993,7 @@ namespace SimpleJSON
 
         public override JSONNode GetValueOrDefault(string aKey, JSONNode aDefault)
         {
-            JSONNode res;
-            if (m_Dict.TryGetValue(aKey, out res))
+            if (m_Dict.TryGetValue(aKey, out JSONNode res))
                 return res;
             return aDefault;
         }
@@ -1170,8 +1166,7 @@ namespace SimpleJSON
             get { return m_Data.ToString("R", CultureInfo.InvariantCulture); }
             protected set
             {
-                double v;
-                if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double v))
                     m_Data = v;
             }
         }
@@ -1253,8 +1248,7 @@ namespace SimpleJSON
             get { return m_Data.ToString(); }
             protected set
             {
-                bool v;
-                if (bool.TryParse(value, out v))
+                if (bool.TryParse(value, out bool v))
                     m_Data = v;
             }
         }
@@ -1309,7 +1303,7 @@ namespace SimpleJSON
 
     public partial class JSONNull : JSONNode
     {
-        static JSONNull m_StaticInstance = new JSONNull();
+        private static readonly JSONNull m_StaticInstance = new JSONNull();
         public static bool reuseSameInstance = true;
         public static JSONNull CreateOrGet()
         {

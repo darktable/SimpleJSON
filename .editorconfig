@@ -1,0 +1,22 @@
+# see http://editorconfig.org/ for docs on this file
+
+[{*.cs,*.json}]
+charset=utf-8
+end_of_line=lf
+indent_size=4
+indent_style=space
+insert_final_newline=true
+trim_trailing_whitespace=true
+
+# Microsoft .NET properties
+dotnet_sort_system_directives_first = true
+csharp_new_line_before_catch=true
+csharp_new_line_before_else=true
+csharp_new_line_before_finally=true
+csharp_new_line_before_members_in_object_initializers=false
+csharp_new_line_before_open_brace = accessors, anonymous_methods, anonymous_types, control_blocks, events, indexers, lambdas, local_functions, methods, object_collection_array_initializers, properties, types
+csharp_space_after_cast=false
+
+[{*.asmdef,*.meta}]
+indent_size=2
+indent_style=space
