@@ -204,10 +204,10 @@ namespace SimpleJSON
             {
                 Inline = true;
 
-                for (int i=0; i < 2; i++)
-				{
+                for (int i = 0; i < 2; i++)
+                {
                     Add(aVec[i]);
-				}
+                }
             }
             return this;
         }
@@ -438,29 +438,29 @@ namespace SimpleJSON
         public Color ReadColor()
         {
             if (IsString && ColorUtility.TryParseHtmlString(Value, out Color htmlColor))
-			{
+            {
                 return htmlColor;
-			}
-            
+            }
+
             if (IsArray)
             {
                 return ReadVector4();
             }
 
             if (IsObject)
-			{
+            {
                 return new Color(this["r"].AsFloat, this["g"].AsFloat, this["b"].AsFloat, this["a"].AsFloat);
-			}
+            }
 
             return Color.white;
         }
 
         public JSONNode WriteColor(Color aColor)
-		{
+        {
             if (IsString)
-			{
-                Value = $"#{ColorUtility.ToHtmlStringRGBA(aColor)}"; 
-			}
+            {
+                Value = $"#{ColorUtility.ToHtmlStringRGBA(aColor)}";
+            }
             else if (IsObject)
             {
                 Inline = true;
@@ -471,12 +471,12 @@ namespace SimpleJSON
 
             }
             else if (IsArray)
-			{
+            {
                 WriteVector4(aColor);
             }
 
             return this;
-		}
+        }
         #endregion Color
 
         #region Color32

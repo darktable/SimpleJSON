@@ -126,25 +126,25 @@ namespace Tests
             var deserializedObject = JSON.Parse(jsonObjectString).ReadRectOffset();
             var deserializedArray = JSON.Parse(jsonArrayString).ReadRectOffset();
 
-			Assert.AreEqual(rectOffset.left, deserializedObject.left);
-			Assert.AreEqual(rectOffset.right, deserializedObject.right);
-			Assert.AreEqual(rectOffset.top, deserializedObject.top);
-			Assert.AreEqual(rectOffset.bottom, deserializedObject.bottom);
+            Assert.AreEqual(rectOffset.left, deserializedObject.left);
+            Assert.AreEqual(rectOffset.right, deserializedObject.right);
+            Assert.AreEqual(rectOffset.top, deserializedObject.top);
+            Assert.AreEqual(rectOffset.bottom, deserializedObject.bottom);
 
-			Assert.AreEqual(rectOffset.left, deserializedArray.left);
-			Assert.AreEqual(rectOffset.right, deserializedArray.right);
-			Assert.AreEqual(rectOffset.top, deserializedArray.top);
-			Assert.AreEqual(rectOffset.bottom, deserializedArray.bottom);
-		}
+            Assert.AreEqual(rectOffset.left, deserializedArray.left);
+            Assert.AreEqual(rectOffset.right, deserializedArray.right);
+            Assert.AreEqual(rectOffset.top, deserializedArray.top);
+            Assert.AreEqual(rectOffset.bottom, deserializedArray.bottom);
+        }
 
         [Test]
         public void MatrixTest()
         {
             Matrix4x4 matrix = new Matrix4x4();
-            for (int i=0; i < 16; i++)
-			{
+            for (int i = 0; i < 16; i++)
+            {
                 matrix[i] = Random.Range(-1.0f, 1.0f);
-			}
+            }
 
             var jsonArray = new JSONArray().WriteMatrix(matrix);
 
@@ -159,21 +159,21 @@ namespace Tests
 
         [Test]
         public void ColorTest()
-        {           
+        {
             Color color = new Color(Random.value, Random.value, Random.value, Random.value);
 
-			var jsonObject = new JSONObject().WriteColor(color);
-			var jsonArray = new JSONArray().WriteColor(color);
+            var jsonObject = new JSONObject().WriteColor(color);
+            var jsonArray = new JSONArray().WriteColor(color);
             var jsonString = new JSONString().WriteColor(color);
 
             var jsonObjectString = jsonObject.ToString();
-			var jsonArrayString = jsonArray.ToString();
+            var jsonArrayString = jsonArray.ToString();
             var jsonStringString = jsonString.ToString();
 
-			Debug.Log($"{color.GetType().Name} object: {jsonObjectString} array: {jsonArrayString} string: {jsonStringString}");
+            Debug.Log($"{color.GetType().Name} object: {jsonObjectString} array: {jsonArrayString} string: {jsonStringString}");
 
-			var deserializedObject = JSON.Parse(jsonObjectString).ReadColor();
-			var deserializedArray = JSON.Parse(jsonArrayString).ReadColor();
+            var deserializedObject = JSON.Parse(jsonObjectString).ReadColor();
+            var deserializedArray = JSON.Parse(jsonArrayString).ReadColor();
 
             Assert.AreEqual(color, deserializedObject);
             Assert.AreEqual(color, deserializedArray);
@@ -201,6 +201,6 @@ namespace Tests
             Assert.AreEqual(color32, deserializedObject);
             Assert.AreEqual(color32, deserializedArray);
             Assert.AreEqual(color32, deserializedString);
-		}
+        }
     }
 }
