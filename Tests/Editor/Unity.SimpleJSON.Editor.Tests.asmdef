@@ -1,7 +1,7 @@
 {
-    "name": "SimpleJSON Tests",
+    "name": "Unity.SimpleJSON.Editor.Tests",
     "references": [
-        "SimpleJSON"
+        "Unity.SimpleJSON"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"
