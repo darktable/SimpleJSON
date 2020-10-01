@@ -352,5 +352,17 @@ namespace Tests
 
             Debug.LogFormat("Serialized result:\n{0}", jsonString);
         }
+
+        [Test]
+        public void NumericTest()
+        {
+            Assert.True(JSONNumber.IsNumeric(0));
+            Assert.True(JSONNumber.IsNumeric(1L));
+            Assert.True(JSONNumber.IsNumeric(2.0f));
+            Assert.True(JSONNumber.IsNumeric(3.0));
+
+            Assert.False(JSONNumber.IsNumeric('2'));
+            Assert.False(JSONNumber.IsNumeric("two"));
+        }
     }
 }

@@ -298,12 +298,6 @@ namespace SimpleJSON
             }
         }
 
-        public virtual byte AsByte
-        {
-            get { return (byte)AsDouble; }
-            set { AsDouble = value; }
-        }
-
         public virtual int AsInt
         {
             get { return (int)AsDouble; }
@@ -337,6 +331,21 @@ namespace SimpleJSON
                 if (long.TryParse(Value, out long val))
                     return val;
                 return 0L;
+            }
+            set
+            {
+                Value = value.ToString();
+            }
+        }
+
+        public virtual ulong AsULong
+        {
+            get
+            {
+                ulong val = 0;
+                if (ulong.TryParse(Value, out val))
+                    return val;
+                return 0;
             }
             set
             {
@@ -399,11 +408,6 @@ namespace SimpleJSON
             return new JSONNumber(n);
         }
 
-        public static implicit operator byte(JSONNode d)
-        {
-            return (d == null) ? (byte)0 : d.AsByte;
-        }
-
         public static implicit operator int(JSONNode d)
         {
             return (d == null) ? 0 : d.AsInt;
@@ -419,6 +423,18 @@ namespace SimpleJSON
         public static implicit operator long(JSONNode d)
         {
             return (d == null) ? 0L : d.AsLong;
+        }
+
+        public static implicit operator JSONNode(ulong n)
+        {
+            if (longAsString)
+                return new JSONString(n.ToString());
+            return new JSONNumber(n);
+        }
+
+        public static implicit operator ulong(JSONNode d)
+        {
+            return (d == null) ? 0 : d.AsULong;
         }
 
         public static implicit operator JSONNode(bool b)
@@ -1193,6 +1209,12 @@ namespace SimpleJSON
             set { m_Data = value; }
         }
 
+        public override ulong AsULong
+        {
+            get { return (ulong)m_Data; }
+            set { m_Data = value; }
+        }
+
         public JSONNumber(double aData)
         {
             m_Data = aData;
@@ -1213,14 +1235,25 @@ namespace SimpleJSON
             aSB.Append(Value);
         }
 
-        internal static bool IsNumeric(object value)
+        public static bool IsNumeric(object value)
         {
-            return value is int || value is uint
-                || value is float || value is double
-                || value is decimal
-                || value is long || value is ulong
-                || value is short || value is ushort
-                || value is sbyte || value is byte;
+            switch (value)
+            {
+                case byte _:
+                case decimal _:
+                case double _:
+                case float _:
+                case int _:
+                case long _:
+                case sbyte _:
+                case short _:
+                case uint _:
+                case ulong _:
+                case ushort _:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         public override bool Equals(object obj)
@@ -1441,12 +1474,6 @@ namespace SimpleJSON
             return 0;
         }
 
-        public override byte AsByte
-        {
-            get { Set(new JSONNumber(0)); return (byte)0; }
-            set { Set(new JSONNumber(value)); }
-        }
-
         public override int AsInt
         {
             get { Set(new JSONNumber(0)); return 0; }
@@ -1466,6 +1493,25 @@ namespace SimpleJSON
         }
 
         public override long AsLong
+        {
+            get
+            {
+                if (longAsString)
+                    Set(new JSONString("0"));
+                else
+                    Set(new JSONNumber(0.0));
+                return 0L;
+            }
+            set
+            {
+                if (longAsString)
+                    Set(new JSONString(value.ToString()));
+                else
+                    Set(new JSONNumber(value));
+            }
+        }
+
+        public override ulong AsULong
         {
             get
             {
