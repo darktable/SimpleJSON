@@ -194,6 +194,8 @@ namespace SimpleJSON
 
         public JSONNode WriteVector2(Vector2 aVec, string aXName = "x", string aYName = "y")
         {
+            Clear();
+
             if (IsObject)
             {
                 Inline = true;
@@ -237,6 +239,8 @@ namespace SimpleJSON
 
         public JSONNode WriteVector3(Vector3 aVec, string aXName = "x", string aYName = "y", string aZName = "z")
         {
+            Clear();
+
             if (IsObject)
             {
                 Inline = true;
@@ -273,6 +277,8 @@ namespace SimpleJSON
 
         public JSONNode WriteVector4(Vector4 aVec)
         {
+            Clear();
+
             if (IsObject)
             {
                 Inline = true;
@@ -311,6 +317,8 @@ namespace SimpleJSON
 
         public JSONNode WriteQuaternion(Quaternion aRot)
         {
+            Clear();
+
             if (IsObject)
             {
                 Inline = true;
@@ -349,6 +357,8 @@ namespace SimpleJSON
 
         public JSONNode WriteRect(Rect aRect)
         {
+            Clear();
+
             if (IsObject)
             {
                 Inline = true;
@@ -386,6 +396,8 @@ namespace SimpleJSON
 
         public JSONNode WriteRectOffset(RectOffset aRect)
         {
+            Clear();
+
             if (IsObject)
             {
                 Inline = true;
@@ -422,6 +434,8 @@ namespace SimpleJSON
 
         public JSONNode WriteMatrix(Matrix4x4 aMatrix)
         {
+            Clear();
+
             if (IsArray)
             {
                 Inline = true;
@@ -457,6 +471,8 @@ namespace SimpleJSON
 
         public JSONNode WriteColor(Color aColor)
         {
+            Clear();
+
             if (IsString)
             {
                 Value = $"#{ColorUtility.ToHtmlStringRGBA(aColor)}";
@@ -468,7 +484,6 @@ namespace SimpleJSON
                 this["g"].AsFloat = aColor.g;
                 this["b"].AsFloat = aColor.b;
                 this["a"].AsFloat = aColor.a;
-
             }
             else if (IsArray)
             {
@@ -502,6 +517,8 @@ namespace SimpleJSON
 
         public JSONNode WriteColor32(Color32 aColor32)
         {
+            Clear();
+
             if (IsString)
             {
                 Value = $"#{ColorUtility.ToHtmlStringRGBA(aColor32)}";
@@ -513,7 +530,6 @@ namespace SimpleJSON
                 this["g"].AsByte = aColor32.g;
                 this["b"].AsByte = aColor32.b;
                 this["a"].AsByte = aColor32.a;
-
             }
             else if (IsArray)
             {

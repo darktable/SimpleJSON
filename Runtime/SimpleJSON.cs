@@ -221,6 +221,11 @@ namespace SimpleJSON
             throw new NotImplementedException();
         }
 
+        public virtual void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual JSONNode Clone()
         {
             throw new NotImplementedException();
@@ -843,7 +848,7 @@ namespace SimpleJSON
             m_List.RemoveAt(index);
         }
 
-        public void Clear()
+        public override void Clear()
         {
             m_List.Clear();
         }
@@ -1054,7 +1059,7 @@ namespace SimpleJSON
             ((IDictionary<string, JSONNode>)m_Dict).Add(item);
         }
 
-        public void Clear()
+        public override void Clear()
         {
             m_Dict.Clear();
         }
@@ -1113,6 +1118,11 @@ namespace SimpleJSON
         public JSONString(string aData)
         {
             m_Data = aData;
+        }
+
+        public override void Clear()
+        {
+            Value = null;
         }
 
         public override JSONNode Clone()

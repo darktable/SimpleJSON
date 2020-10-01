@@ -174,6 +174,7 @@ namespace Tests
 
             Assert.AreEqual(color, deserializedObject);
             Assert.AreEqual(color, deserializedArray);
+            Assert.AreEqual(deserializedObject, deserializedArray);
         }
 
         [Test]
@@ -198,6 +199,8 @@ namespace Tests
             Assert.AreEqual(color32, deserializedObject);
             Assert.AreEqual(color32, deserializedArray);
             Assert.AreEqual(color32, deserializedString);
+            Assert.AreEqual(deserializedObject, deserializedArray);
+            Assert.AreEqual(deserializedString, deserializedArray);
         }
     }
 }
