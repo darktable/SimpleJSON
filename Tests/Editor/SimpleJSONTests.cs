@@ -7,6 +7,9 @@ namespace Tests
 {
     public class SimpleJSONTests
     {
+        private const long MAX_SAFE_INTEGER = (long)1 << 53;
+        private const long MIN_SAFE_INTEGER = -(long)1 << 53;
+
         private const string jsonString = "{ \"array\": [1.44,2,3], " +
                                           "\"object\": {\"key1\":\"value1\", \"key2\":256}, " +
                                           "\"string\": \"The quick brown fox \\\"jumps\\\" over the lazy dog \", " +
@@ -363,6 +366,67 @@ namespace Tests
 
             Assert.False(JSONNumber.IsNumeric('2'));
             Assert.False(JSONNumber.IsNumeric("two"));
+        }
+
+        [Test]
+        public void MinMaxTest()
+        {
+            Debug.Log($"max safe int64: {MAX_SAFE_INTEGER} min safe int64: {MIN_SAFE_INTEGER}");
+
+            var jsonObject = new JSONObject();
+            jsonObject["maxLong"] = long.MaxValue;
+            jsonObject["minLong"] = long.MinValue;
+            jsonObject["maxULong"] = ulong.MaxValue;
+            jsonObject["minULong"] = ulong.MinValue;
+            jsonObject["maxDecimal"] = decimal.MaxValue;
+            jsonObject["minDecimal"] = decimal.MinValue;
+
+            jsonObject["maxSafeInt"] = MAX_SAFE_INTEGER;
+            jsonObject["maxSafeInt+1"] = MAX_SAFE_INTEGER + 1;
+
+            jsonObject["minSafeInt"] = MIN_SAFE_INTEGER;
+            jsonObject["minSafeInt-1"] = MIN_SAFE_INTEGER - 1;
+
+
+            var jsonObjectString = jsonObject.ToString();
+
+            Debug.Log($"minmax values: {jsonObjectString}");
+
+            var deserializedObject = JSON.Parse(jsonObjectString);
+
+            Assert.AreEqual(deserializedObject["maxLong"].AsLong, long.MaxValue);
+            Assert.AreEqual(deserializedObject["minLong"].AsLong, long.MinValue);
+            Assert.AreEqual(deserializedObject["maxULong"].AsULong, ulong.MaxValue);
+            Assert.AreEqual(deserializedObject["minULong"].AsULong, ulong.MinValue);
+            Assert.AreEqual(deserializedObject["maxDecimal"].AsDecimal, decimal.MaxValue);
+            Assert.AreEqual(deserializedObject["minDecimal"].AsDecimal, decimal.MinValue);
+
+            Assert.AreNotEqual(jsonObject["maxSafeInt"].AsLong, jsonObject["maxSafeInt+1"].AsLong);
+            Assert.AreEqual(jsonObject["maxSafeInt"].AsDouble, jsonObject["maxSafeInt+1"].AsDouble);
+
+            Assert.AreNotEqual(jsonObject["minSafeInt"].AsLong, jsonObject["minSafeInt-1"].AsLong);
+            Assert.AreEqual(jsonObject["minSafeInt"].AsDouble, jsonObject["minSafeInt-1"].AsDouble);
+
+            var bigInt64 = new JSONNumber(0);
+            var smallInt64 = new JSONNumber(0);
+
+            bigInt64.AsULong = MAX_SAFE_INTEGER;
+            smallInt64.AsLong = MIN_SAFE_INTEGER;
+
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                bigInt64.AsLong = (long)(MAX_SAFE_INTEGER + 1);
+            });
+
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                smallInt64.AsLong = (long)(MIN_SAFE_INTEGER - 1);
+            });
+
+            Assert.Throws<System.ArgumentException>(() =>
+            {
+                bigInt64.AsULong = (long)(MAX_SAFE_INTEGER + 1);
+            });
         }
     }
 }

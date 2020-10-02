@@ -57,6 +57,10 @@ namespace SimpleJSON
                     return color32Value;
 #endif
 
+                case long _:
+                case ulong _:
+                case decimal _:
+                    return new JSONString(value.ToString());
                 default:
                     if (JSONNumber.IsNumeric(value))
                     {

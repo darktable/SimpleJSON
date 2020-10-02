@@ -52,6 +52,7 @@ namespace SimpleJSON
         None = 7,
         Custom = 0xFF,
     }
+
     public enum JSONTextMode
     {
         Compact,
@@ -175,7 +176,6 @@ namespace SimpleJSON
         #region common interface
 
         public static bool forceASCII = false; // Use Unicode by default
-        public static bool longAsString = false; // lazy creator creates a JSONString instead of JSONNumber
         public static bool allowLineComments = true; // allow "//"-style comments at the end of a line
 
         public abstract JSONNodeType Tag { get; }
@@ -415,9 +415,7 @@ namespace SimpleJSON
 
         public static implicit operator JSONNode(long n)
         {
-            if (longAsString)
-                return new JSONString(n.ToString());
-            return new JSONNumber(n);
+            return new JSONString(n.ToString());
         }
 
         public static implicit operator long(JSONNode d)
@@ -427,9 +425,7 @@ namespace SimpleJSON
 
         public static implicit operator JSONNode(ulong n)
         {
-            if (longAsString)
-                return new JSONString(n.ToString());
-            return new JSONNumber(n);
+            return new JSONString(n.ToString());
         }
 
         public static implicit operator ulong(JSONNode d)
@@ -1181,6 +1177,9 @@ namespace SimpleJSON
 
     public partial class JSONNumber : JSONNode
     {
+        private const long MAX_SAFE_INTEGER = (long)1 << 53;
+        private const long MIN_SAFE_INTEGER = -(long)1 << 53;
+
         private double m_Data;
 
         public override JSONNodeType Tag { get { return JSONNodeType.Number; } }
@@ -1193,7 +1192,9 @@ namespace SimpleJSON
             protected set
             {
                 if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double v))
+                {
                     m_Data = v;
+                }
             }
         }
 
@@ -1206,13 +1207,29 @@ namespace SimpleJSON
         public override long AsLong
         {
             get { return (long)m_Data; }
-            set { m_Data = value; }
+            set
+            {
+                if (value > MAX_SAFE_INTEGER || value < MIN_SAFE_INTEGER)
+                {
+                    throw new ArgumentException("JSONumber cannot store an INT64 this large without losing precision");
+                }
+
+                m_Data = value;
+            }
         }
 
         public override ulong AsULong
         {
             get { return (ulong)m_Data; }
-            set { m_Data = value; }
+            set
+            {
+                if (value > MAX_SAFE_INTEGER)
+                {
+                    throw new ArgumentException("JSONumber cannot store an INT64 this large without losing precision");
+                }
+
+                m_Data = value;
+            }
         }
 
         public JSONNumber(double aData)
@@ -1496,18 +1513,12 @@ namespace SimpleJSON
         {
             get
             {
-                if (longAsString)
-                    Set(new JSONString("0"));
-                else
-                    Set(new JSONNumber(0.0));
+                Set(new JSONString("0"));
                 return 0L;
             }
             set
             {
-                if (longAsString)
-                    Set(new JSONString(value.ToString()));
-                else
-                    Set(new JSONNumber(value));
+                Set(new JSONString(value.ToString()));
             }
         }
 
@@ -1515,18 +1526,12 @@ namespace SimpleJSON
         {
             get
             {
-                if (longAsString)
-                    Set(new JSONString("0"));
-                else
-                    Set(new JSONNumber(0.0));
+                Set(new JSONString("0"));
                 return 0L;
             }
             set
             {
-                if (longAsString)
-                    Set(new JSONString(value.ToString()));
-                else
-                    Set(new JSONNumber(value));
+                Set(new JSONString(value.ToString()));
             }
         }
 
