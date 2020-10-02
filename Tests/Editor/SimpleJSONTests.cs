@@ -46,7 +46,7 @@ namespace Tests
                 doubleArray[i] = jsonArray[i].AsDouble;
             }
 
-            var jsonObject = parsedJSON["object"];
+            var jsonObject = parsedJSON["object"].AsObject;
 
             objectDictionary = new Dictionary<string, object>();
 
@@ -68,7 +68,7 @@ namespace Tests
         [Test]
         public void ArrayTest()
         {
-            var jsonArray = JSON.ToJSONNode(doubleArray);
+            var jsonArray = JSON.ToJSONNode(doubleArray).AsArray;
 
             for (int i = 0; i < jsonArray.Count; i++)
             {
@@ -76,16 +76,41 @@ namespace Tests
 
                 Assert.AreEqual(jsonArray[i].AsDouble, doubleArray[i]);
             }
+
+            var index = 0;
+            foreach (var node in jsonArray)
+            {
+                Assert.AreEqual(node, parsedJSON["array"][index]);
+
+                Assert.AreEqual(node.AsDouble, doubleArray[index]);
+                index++;
+            }
+
+            index = 0;
+            foreach (var node in jsonArray.Children)
+            {
+                Assert.AreEqual(node, parsedJSON["array"][index]);
+
+                Assert.AreEqual(node.AsDouble, doubleArray[index]);
+                index++;
+            }
         }
 
         [Test]
         public void DictionaryTest()
         {
-            var jsonObject = JSON.ToJSONNode(objectDictionary);
+            var jsonObject = JSON.ToJSONNode(objectDictionary).AsObject;
 
             foreach (var key in jsonObject.Keys)
             {
                 Assert.AreEqual(jsonObject[key], parsedJSON["object"][key]);
+            }
+
+            foreach (var kvp in jsonObject)
+            {
+                Assert.AreEqual(jsonObject[kvp.Key], parsedJSON["object"][kvp.Key]);
+
+                Assert.AreEqual(kvp.Value, parsedJSON["object"][kvp.Key]);
             }
         }
 
