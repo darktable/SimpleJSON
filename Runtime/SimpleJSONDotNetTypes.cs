@@ -1,6 +1,6 @@
 #region License and information
 /* * * * *
- * 
+ *
  * Extension file for the SimpleJSON framework for better support of some common
  * .NET types. It does only work together with the SimpleJSON.cs
  * It provides direct conversion support for types like decimal, char, byte,
@@ -11,21 +11,21 @@
  * Finally there are some additional type conversion operators for some nullable
  * types like short?, int?, float?, double?, long? and bool?. They will actually
  * assign a JSONNull value when it's null or a JSONNumber when it's not.
- * 
+ *
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2020 Markus Göbel (Bunny83)
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,7 +33,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * * * * */
 
 #endregion License and information
@@ -49,9 +49,10 @@ namespace SimpleJSON
         {
             get
             {
-                decimal result;
-                if (!decimal.TryParse(Value, out result))
+                if (!decimal.TryParse(Value, out decimal result))
+                {
                     result = 0;
+                }
                 return result;
             }
             set
@@ -77,17 +78,25 @@ namespace SimpleJSON
             get
             {
                 if (IsString && Value.Length > 0)
+                {
                     return Value[0];
+                }
                 if (IsNumber)
+                {
                     return (char)AsInt;
+                }
                 return '\0';
             }
             set
             {
                 if (IsString)
+                {
                     Value = value.ToString();
+                }
                 else if (IsNumber)
+                {
                     AsInt = (int)value;
+                }
             }
         }
 
@@ -227,20 +236,21 @@ namespace SimpleJSON
         {
             get
             {
-                System.DateTime result;
-                if (!System.DateTime.TryParse(Value, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                if (!System.DateTime.TryParse(Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out System.DateTime result))
+                {
                     result = new System.DateTime(0);
+                }
                 return result;
             }
             set
             {
-                Value = value.ToString(CultureInfo.InvariantCulture);
+                Value = value.ToString("O");
             }
         }
 
         public static implicit operator JSONNode(System.DateTime aDateTime)
         {
-            return new JSONString(aDateTime.ToString(CultureInfo.InvariantCulture));
+            return new JSONString(aDateTime.ToString("O"));
         }
 
         public static implicit operator System.DateTime(JSONNode aNode)
@@ -254,9 +264,10 @@ namespace SimpleJSON
         {
             get
             {
-                System.TimeSpan result;
-                if (!System.TimeSpan.TryParse(Value, CultureInfo.InvariantCulture, out result))
+                if (!System.TimeSpan.TryParse(Value, CultureInfo.InvariantCulture, out System.TimeSpan result))
+                {
                     result = new System.TimeSpan(0);
+                }
                 return result;
             }
             set
@@ -281,8 +292,7 @@ namespace SimpleJSON
         {
             get
             {
-                System.Guid result;
-                System.Guid.TryParse(Value, out result);
+                System.Guid.TryParse(Value, out System.Guid result);
                 return result;
             }
             set
@@ -307,21 +317,29 @@ namespace SimpleJSON
         {
             get
             {
-                if (this.IsNull || !this.IsArray)
+                if (IsNull || !IsArray)
+                {
                     return null;
+                }
                 int count = Count;
                 byte[] result = new byte[count];
                 for (int i = 0; i < count; i++)
+                {
                     result[i] = this[i].AsByte;
+                }
                 return result;
             }
             set
             {
                 if (!IsArray || value == null)
+                {
                     return;
+                }
                 Clear();
                 for (int i = 0; i < value.Length; i++)
+                {
                     Add(value[i]);
+                }
             }
         }
 
@@ -341,21 +359,29 @@ namespace SimpleJSON
         {
             get
             {
-                if (this.IsNull || !this.IsArray)
+                if (IsNull || !IsArray)
+                {
                     return null;
+                }
                 int count = Count;
                 List<byte> result = new List<byte>(count);
                 for (int i = 0; i < count; i++)
+                {
                     result.Add(this[i].AsByte);
+                }
                 return result;
             }
             set
             {
                 if (!IsArray || value == null)
+                {
                     return;
+                }
                 Clear();
                 for (int i = 0; i < value.Count; i++)
+                {
                     Add(value[i]);
+                }
             }
         }
 
@@ -375,21 +401,29 @@ namespace SimpleJSON
         {
             get
             {
-                if (this.IsNull || !this.IsArray)
+                if (IsNull || !IsArray)
+                {
                     return null;
+                }
                 int count = Count;
                 string[] result = new string[count];
                 for (int i = 0; i < count; i++)
+                {
                     result[i] = this[i].Value;
+                }
                 return result;
             }
             set
             {
                 if (!IsArray || value == null)
+                {
                     return;
+                }
                 Clear();
                 for (int i = 0; i < value.Length; i++)
+                {
                     Add(value[i]);
+                }
             }
         }
 
@@ -409,21 +443,29 @@ namespace SimpleJSON
         {
             get
             {
-                if (this.IsNull || !this.IsArray)
+                if (IsNull || !IsArray)
+                {
                     return null;
+                }
                 int count = Count;
                 List<string> result = new List<string>(count);
                 for (int i = 0; i < count; i++)
+                {
                     result.Add(this[i].Value);
+                }
                 return result;
             }
             set
             {
                 if (!IsArray || value == null)
+                {
                     return;
+                }
                 Clear();
                 for (int i = 0; i < value.Count; i++)
+                {
                     Add(value[i]);
+                }
             }
         }
 
@@ -442,84 +484,108 @@ namespace SimpleJSON
         public static implicit operator JSONNode(int? aValue)
         {
             if (aValue == null)
+            {
                 return JSONNull.CreateOrGet();
+            }
             return new JSONNumber((int)aValue);
         }
 
         public static implicit operator int?(JSONNode aNode)
         {
             if (aNode == null || aNode.IsNull)
+            {
                 return null;
+            }
             return aNode.AsInt;
         }
 
         public static implicit operator JSONNode(float? aValue)
         {
             if (aValue == null)
+            {
                 return JSONNull.CreateOrGet();
+            }
             return new JSONNumber((float)aValue);
         }
 
         public static implicit operator float?(JSONNode aNode)
         {
             if (aNode == null || aNode.IsNull)
+            {
                 return null;
+            }
             return aNode.AsFloat;
         }
 
         public static implicit operator JSONNode(double? aValue)
         {
             if (aValue == null)
+            {
                 return JSONNull.CreateOrGet();
+            }
             return new JSONNumber((double)aValue);
         }
 
         public static implicit operator double?(JSONNode aNode)
         {
             if (aNode == null || aNode.IsNull)
+            {
                 return null;
+            }
             return aNode.AsDouble;
         }
 
         public static implicit operator JSONNode(bool? aValue)
         {
             if (aValue == null)
+            {
                 return JSONNull.CreateOrGet();
+            }
             return new JSONBool((bool)aValue);
         }
 
         public static implicit operator bool?(JSONNode aNode)
         {
             if (aNode == null || aNode.IsNull)
+            {
                 return null;
+            }
             return aNode.AsBool;
         }
 
         public static implicit operator JSONNode(long? aValue)
         {
             if (aValue == null)
+            {
                 return JSONNull.CreateOrGet();
+            }
             return new JSONNumber((long)aValue);
         }
 
         public static implicit operator long?(JSONNode aNode)
         {
             if (aNode == null || aNode.IsNull)
+            {
                 return null;
+            }
             return aNode.AsLong;
         }
 
         public static implicit operator JSONNode(short? aValue)
         {
             if (aValue == null)
+            {
                 return JSONNull.CreateOrGet();
+            }
             return new JSONNumber((short)aValue);
         }
 
         public static implicit operator short?(JSONNode aNode)
         {
             if (aNode == null || aNode.IsNull)
+            {
                 return null;
+            }
             return aNode.AsShort;
         }
         #endregion NullableTypes

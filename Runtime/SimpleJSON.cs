@@ -166,7 +166,9 @@ namespace SimpleJSON
             get
             {
                 if (double.TryParse(Value, NumberStyles.Float, CultureInfo.InvariantCulture, out double v))
+                {
                     return v;
+                }
                 return 0.0;
             }
             set
@@ -192,7 +194,9 @@ namespace SimpleJSON
             get
             {
                 if (bool.TryParse(Value, out bool v))
+                {
                     return v;
+                }
                 return !string.IsNullOrEmpty(Value);
             }
             set
@@ -206,7 +210,9 @@ namespace SimpleJSON
             get
             {
                 if (long.TryParse(Value, out long val))
+                {
                     return val;
+                }
                 return 0L;
             }
             set
@@ -220,7 +226,9 @@ namespace SimpleJSON
             get
             {
                 if (ulong.TryParse(Value, out ulong val))
+                {
                     return val;
+                }
                 return 0;
             }
             set
@@ -327,11 +335,15 @@ namespace SimpleJSON
         public static bool operator ==(JSONNode a, object b)
         {
             if (ReferenceEquals(a, b))
+            {
                 return true;
+            }
             bool aIsNull = a is JSONNull || ReferenceEquals(a, null) || a is JSONLazyCreator;
             bool bIsNull = b is JSONNull || ReferenceEquals(b, null) || b is JSONLazyCreator;
             if (aIsNull && bIsNull)
+            {
                 return true;
+            }
             return !aIsNull && a.Equals(b);
         }
 
@@ -360,7 +372,9 @@ namespace SimpleJSON
             get
             {
                 if (m_EscapeBuilder == null)
+                {
                     m_EscapeBuilder = new StringBuilder();
+                }
                 return m_EscapeBuilder;
             }
         }
@@ -370,7 +384,9 @@ namespace SimpleJSON
             var sb = EscapeBuilder;
             sb.Length = 0;
             if (sb.Capacity < aText.Length + aText.Length / 10)
+            {
                 sb.Capacity = aText.Length + aText.Length / 10;
+            }
             foreach (char c in aText)
             {
                 switch (c)
@@ -403,7 +419,9 @@ namespace SimpleJSON
                             sb.Append("\\u").Append(val.ToString("X4"));
                         }
                         else
+                        {
                             sb.Append(c);
+                        }
                         break;
                 }
             }
@@ -415,17 +433,34 @@ namespace SimpleJSON
         private static JSONNode ParseElement(string token, bool quoted)
         {
             if (quoted)
+            {
                 return token;
-            if (token.Equals(TOKEN_FALSE, StringComparison.InvariantCultureIgnoreCase)
-                || token.Equals(TOKEN_TRUE, StringComparison.InvariantCultureIgnoreCase))
-                return token.Equals(TOKEN_TRUE, StringComparison.InvariantCultureIgnoreCase);
-            if (token.Equals(TOKEN_NULL, StringComparison.InvariantCultureIgnoreCase))
-                return JSONNull.CreateOrGet();
+            }
+
+            if (token.Length <= 5)
+            {
+                if (token.Equals(TOKEN_FALSE, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return false;
+                }
+                if (token.Equals(TOKEN_TRUE, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+                if (token.Equals(TOKEN_NULL, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return JSONNull.CreateOrGet();
+                }
+            }
 
             if (double.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
+            {
                 return val;
+            }
             else
+            {
                 return token;
+            }
         }
 
         public static JSONNode Parse(string aJSON)
@@ -532,7 +567,9 @@ namespace SimpleJSON
                     case ' ':
                     case '\t':
                         if (QuoteMode)
+                        {
                             Token.Append(aJSON[i]);
+                        }
                         break;
 
                     case '\\':
@@ -558,14 +595,12 @@ namespace SimpleJSON
                                     Token.Append('\f');
                                     break;
                                 case 'u':
-                                    {
-                                        string s = aJSON.Substring(i + 1, 4);
-                                        Token.Append((char)int.Parse(
-                                            s,
-                                            System.Globalization.NumberStyles.AllowHexSpecifier));
-                                        i += 4;
-                                        break;
-                                    }
+                                    string s = aJSON.Substring(i + 1, 4);
+                                    Token.Append((char)int.Parse(
+                                        s,
+                                        System.Globalization.NumberStyles.AllowHexSpecifier));
+                                    i += 4;
+                                    break;
                                 default:
                                     Token.Append(C);
                                     break;
@@ -594,7 +629,9 @@ namespace SimpleJSON
                 throw new Exception("JSON Parse: Quotation marks seems to be messed up.");
             }
             if (ctx == null)
+            {
                 return ParseElement(Token.ToString(), TokenIsQuoted);
+            }
             return ctx;
         }
     }
@@ -702,9 +739,13 @@ namespace SimpleJSON
             foreach (var n in m_List)
             {
                 if (n != null)
+                {
                     node.Add(n.Clone());
+                }
                 else
+                {
                     node.Add(null);
+                }
             }
             return node;
         }
@@ -725,20 +766,30 @@ namespace SimpleJSON
             aSB.Append('[');
             int count = m_List.Count;
             if (inline)
+            {
                 aMode = JSONTextMode.Compact;
+            }
             for (int i = 0; i < count; i++)
             {
                 if (i > 0)
+                {
                     aSB.Append(',');
+                }
                 if (aMode == JSONTextMode.Indent)
+                {
                     aSB.AppendLine();
+                }
 
                 if (aMode == JSONTextMode.Indent)
+                {
                     aSB.Append(' ', aIndent + aIndentInc);
+                }
                 m_List[i].WriteToStringBuilder(aSB, aIndent + aIndentInc, aIndentInc, aMode);
             }
             if (aMode == JSONTextMode.Indent)
+            {
                 aSB.AppendLine().Append(' ', aIndent);
+            }
             aSB.Append(']');
         }
 
@@ -843,18 +894,28 @@ namespace SimpleJSON
             get
             {
                 if (m_Dict.ContainsKey(aKey))
+                {
                     return m_Dict[aKey];
+                }
                 else
+                {
                     return new JSONLazyCreator(this, aKey);
+                }
             }
             set
             {
                 if (value == null)
+                {
                     value = JSONNull.CreateOrGet();
+                }
                 if (m_Dict.ContainsKey(aKey))
+                {
                     m_Dict[aKey] = value;
+                }
                 else
+                {
                     m_Dict.Add(aKey, value);
+                }
             }
         }
 
@@ -876,7 +937,9 @@ namespace SimpleJSON
             }
 
             if (aItem == null)
+            {
                 aItem = JSONNull.CreateOrGet();
+            }
 
             m_Dict[aKey] = aItem;
         }
@@ -884,7 +947,9 @@ namespace SimpleJSON
         public override JSONNode Remove(string aKey)
         {
             if (!m_Dict.ContainsKey(aKey))
+            {
                 return null;
+            }
             JSONNode tmp = m_Dict[aKey];
             m_Dict.Remove(aKey);
             return tmp;
@@ -927,7 +992,9 @@ namespace SimpleJSON
         public override JSONNode GetValueOrDefault(string aKey, JSONNode aDefault)
         {
             if (m_Dict.TryGetValue(aKey, out JSONNode res))
+            {
                 return res;
+            }
             return aDefault;
         }
 
@@ -947,7 +1014,9 @@ namespace SimpleJSON
             aSB.Append('{');
             bool first = true;
             if (inline)
+            {
                 aMode = JSONTextMode.Compact;
+            }
             foreach (var k in m_Dict)
             {
                 if (!first)
@@ -965,7 +1034,9 @@ namespace SimpleJSON
                 k.Value.WriteToStringBuilder(aSB, aIndent + aIndentInc, aIndentInc, aMode);
             }
             if (aMode == JSONTextMode.Indent)
+            {
                 aSB.AppendLine().Append(' ', aIndent);
+            }
             aSB.Append('}');
         }
 
@@ -1126,7 +1197,7 @@ namespace SimpleJSON
             {
                 if (value > MAX_SAFE_INTEGER || value < MIN_SAFE_INTEGER)
                 {
-                    throw new ArgumentException("JSONumber cannot store an INT64 this large without losing precision");
+                    throw new ArgumentException("JSONNumber cannot store an INT64 this large without losing precision");
                 }
 
                 m_Data = value;
@@ -1140,7 +1211,7 @@ namespace SimpleJSON
             {
                 if (value > MAX_SAFE_INTEGER)
                 {
-                    throw new ArgumentException("JSONumber cannot store an INT64 this large without losing precision");
+                    throw new ArgumentException("JSONNumber cannot store an INT64 this large without losing precision");
                 }
 
                 m_Data = value;
@@ -1198,7 +1269,9 @@ namespace SimpleJSON
                     return m_Data == jsonNumber.m_Data;
                 default:
                     if (IsNumeric(obj))
+                    {
                         return Convert.ToDouble(obj) == m_Data;
+                    }
                     return base.Equals(obj);
             }
         }
@@ -1223,7 +1296,9 @@ namespace SimpleJSON
             protected set
             {
                 if (bool.TryParse(value, out bool v))
+                {
                     m_Data = v;
+                }
             }
         }
 
@@ -1282,7 +1357,9 @@ namespace SimpleJSON
         public static JSONNull CreateOrGet()
         {
             if (reuseSameInstance)
+            {
                 return m_StaticInstance;
+            }
             return new JSONNull();
         }
 
@@ -1311,7 +1388,9 @@ namespace SimpleJSON
         public override bool Equals(object obj)
         {
             if (object.ReferenceEquals(this, obj))
+            {
                 return true;
+            }
             return (obj is JSONNull);
         }
 
@@ -1349,9 +1428,13 @@ namespace SimpleJSON
         private T Set<T>(T aVal) where T : JSONNode
         {
             if (m_Key == null)
+            {
                 m_Node.Add(aVal);
+            }
             else
+            {
                 m_Node.Add(m_Key, aVal);
+            }
             m_Node = null; // Be GC friendly.
             return aVal;
         }
@@ -1391,9 +1474,13 @@ namespace SimpleJSON
         public override bool Equals(object obj)
         {
             if (obj == null)
+            {
                 return true;
+            }
             if (obj is JSONNull)
+            {
                 return true;
+            }
 
             return System.Object.ReferenceEquals(this, obj);
         }

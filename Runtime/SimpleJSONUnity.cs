@@ -53,7 +53,9 @@ namespace SimpleJSON
         private static JSONNode GetContainer(JSONContainerType aType)
         {
             if (aType == JSONContainerType.Array)
+            {
                 return new JSONArray();
+            }
             return new JSONObject();
         }
 
@@ -172,9 +174,13 @@ namespace SimpleJSON
         public Vector2 ReadVector2(Vector2 aDefault)
         {
             if (IsObject)
+            {
                 return new Vector2(this["x"].AsFloat, this["y"].AsFloat);
+            }
             if (IsArray)
+            {
                 return new Vector2(this[0].AsFloat, this[1].AsFloat);
+            }
             return aDefault;
         }
 
@@ -219,16 +225,22 @@ namespace SimpleJSON
         public Vector3 ReadVector3(Vector3 aDefault)
         {
             if (IsObject)
+            {
                 return new Vector3(this["x"].AsFloat, this["y"].AsFloat, this["z"].AsFloat);
+            }
             if (IsArray)
+            {
                 return new Vector3(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat);
+            }
             return aDefault;
         }
 
         public Vector3 ReadVector3(string aXName, string aYName, string aZName)
         {
             if (IsObject)
+            {
                 return new Vector3(this[aXName].AsFloat, this[aYName].AsFloat, this[aZName].AsFloat);
+            }
             return Vector3.zero;
         }
 
@@ -264,9 +276,13 @@ namespace SimpleJSON
         public Vector4 ReadVector4(Vector4 aDefault)
         {
             if (IsObject)
+            {
                 return new Vector4(this["x"].AsFloat, this["y"].AsFloat, this["z"].AsFloat, this["w"].AsFloat);
+            }
             if (IsArray)
+            {
                 return new Vector4(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this[3].AsFloat);
+            }
             return aDefault;
         }
 
@@ -304,9 +320,13 @@ namespace SimpleJSON
         public Quaternion ReadQuaternion(Quaternion aDefault)
         {
             if (IsObject)
+            {
                 return new Quaternion(this["x"].AsFloat, this["y"].AsFloat, this["z"].AsFloat, this["w"].AsFloat);
+            }
             if (IsArray)
+            {
                 return new Quaternion(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this[3].AsFloat);
+            }
             return aDefault;
         }
 
@@ -344,9 +364,13 @@ namespace SimpleJSON
         public Rect ReadRect(Rect aDefault)
         {
             if (IsObject)
+            {
                 return new Rect(this["x"].AsFloat, this["y"].AsFloat, this["width"].AsFloat, this["height"].AsFloat);
+            }
             if (IsArray)
+            {
                 return new Rect(this[0].AsFloat, this[1].AsFloat, this[2].AsFloat, this[3].AsFloat);
+            }
             return aDefault;
         }
 
@@ -383,9 +407,13 @@ namespace SimpleJSON
         public RectOffset ReadRectOffset(RectOffset aDefault)
         {
             if (this is JSONObject)
+            {
                 return new RectOffset(this["left"].AsInt, this["right"].AsInt, this["top"].AsInt, this["bottom"].AsInt);
+            }
             if (this is JSONArray)
+            {
                 return new RectOffset(this[0].AsInt, this[1].AsInt, this[2].AsInt, this[3].AsInt);
+            }
             return aDefault;
         }
 
